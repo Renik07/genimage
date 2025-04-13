@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const path = require('path');
 
-app.use('/images', express.static(__dirname + '/public/images'));
+// Раздача статики из папки public
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+// Пример: запуск сервера
+app.listen(3000, () => {
+  console.log('Server started on http://localhost:3000');
 });

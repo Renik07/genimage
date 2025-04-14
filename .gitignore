@@ -13,5 +13,6 @@ yarn-error.log*
 logs
 *.log
 
-# Картинки (если их генерируешь)
+# Картинки
+public/images
 public/images

@@ -14,4 +14,4 @@ logs
 *.log
 
 # Картинки (если их генерируешь)
-public/imagesnode_modules/
+public/images

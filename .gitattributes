@@ -1,0 +1,9 @@
+# Применить LF для всех текстовых файлов
+* text eol=lf
+
+# Явно указать типы файлов
+*.js text
+*.json text
+*.css text
+*.html text
+*.md text

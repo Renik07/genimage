@@ -5,14 +5,23 @@ const path = require("path");
 
 // fonts
 registerFont(
-  path.resolve(__dirname, "public/fonts", "TT-Bluescreens-Trial-ExtraBold.ttf"),
+  path.resolve("./public/fonts/TT-Bluescreens-Trial-ExtraBold.ttf"),
   {
     family: "TTBluescreensTrial",
   }
 );
-registerFont(path.resolve(__dirname, "public/fonts", "UniSans-Heavy.ttf"), {
+registerFont(path.resolve("./public/fonts/UniSans-Heavy.ttf"), {
   family: "UniSansHeavyCaps",
 });
+// registerFont(
+//   path.join(__dirname, "public/fonts", "TT-Bluescreens-Trial-ExtraBold.ttf"),
+//   {
+//     family: "TTBluescreensTrial",
+//   }
+// );
+// registerFont(path.join(__dirname, "public/fonts", "UniSans-Heavy.ttf"), {
+//   family: "UniSansHeavyCaps",
+// });
 
 async function generateImage(eventData, outputFilename) {
   const width = 1000;

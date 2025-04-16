@@ -5,12 +5,12 @@ const path = require("path");
 
 // fonts
 registerFont(
-  path.join(__dirname, "public/fonts", "TT-Bluescreens-Trial-ExtraBold.ttf"),
+  path.resolve(__dirname, "public/fonts", "TT-Bluescreens-Trial-ExtraBold.ttf"),
   {
     family: "TTBluescreensTrial",
   }
 );
-registerFont(path.join(__dirname, "public/fonts", "UniSans-Heavy.ttf"), {
+registerFont(path.resolve(__dirname, "public/fonts", "UniSans-Heavy.ttf"), {
   family: "UniSansHeavyCaps",
 });
 

@@ -3,7 +3,7 @@ const generateImage = require("./generateImage");
 const slugify = require("slugify"); // если хочешь красивые имена файлов
 
 async function main() {
-  const response = await axios.get("https://leon.ru/blog/api/top-events");
+  const response = await axios.get("https://leon.ru/blog/api/top-events?sport_id=1");
   const events = response.data;
 
   for (const event of events) {

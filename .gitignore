@@ -14,5 +14,4 @@ logs
 *.log
 
 # Картинки
-public/images
-public/images
+public/images/

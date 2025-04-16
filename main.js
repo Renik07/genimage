@@ -24,7 +24,7 @@ const imagesDir = path.join(__dirname, "public/images");
 
 async function fetchAndGenerate() {
   try {
-    const response = await axios.get("https://leon.ru/blog/api/top-events");
+    const response = await axios.get("https://leon.ru/blog/api/top-events?sport_id=1");
     const events = response.data;
 
     for (const event of events) {

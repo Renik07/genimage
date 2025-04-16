@@ -10,7 +10,7 @@ registerFont(
     family: "TTBluescreensTrial",
   }
 );
-registerFont(path.join(__dirname, "public/fonts", "unisansheavycaps.ttf"), {
+registerFont(path.join(__dirname, "public/fonts", "UniSans-Heavy.ttf"), {
   family: "UniSansHeavyCaps",
 });
 

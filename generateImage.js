@@ -4,12 +4,12 @@ const fs = require("fs");
 const path = require("path");
 
 // fonts
-registerFont(
-  path.resolve("./public/fonts/TT-Bluescreens-Trial-ExtraBold.ttf"),
-  {
-    family: "TTBluescreensTrial",
-  }
-);
+// registerFont(
+//   path.resolve("./public/fonts/TT-Bluescreens-Trial-ExtraBold.ttf"),
+//   {
+//     family: "TTBluescreensTrial",
+//   }
+// );
 registerFont(path.resolve("./public/fonts/UniSans-Heavy.ttf"), {
   family: "UniSansHeavyCaps",
 });
@@ -68,7 +68,7 @@ async function generateImage(eventData, outputFilename) {
   ctx.textAlign = "left";
 
   // Дата матча
-  ctx.font = "58px TTBluescreensTrial";
+  ctx.font = "58px UniSansHeavyCaps";
   ctx.fillStyle = "#fff";
   ctx.fillText(`${formatDateTime(eventData.kickoff)}`, 122, 170);
 

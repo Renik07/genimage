@@ -5,23 +5,10 @@ const path = require("path");
 
 // fonts
 // registerFont(
-//   path.resolve("./public/fonts/TT-Bluescreens-Trial-ExtraBold.ttf"),
-//   {
-//     family: "TTBluescreensTrial",
-//   }
-// );
-// registerFont(path.resolve("./public/fonts/UniSans-Heavy.ttf"), {
-//   family: "UniSansHeavyCaps",
-// });
-// registerFont(
 //   path.join(__dirname, "public/fonts", "Roboto-ExtraBold.ttf"),
 //   {
 //     family: "RobotoExtraBold",
 //   }
-// );
-// registerFont(path.join(__dirname, "public/fonts", "Roboto-Condensed-ExtraBold.ttf"), {
-//   family: "RobotoCondensedExtraBold",
-// });
 
 async function generateImage(eventData, outputFilename) {
   const width = 1000;
@@ -33,7 +20,7 @@ async function generateImage(eventData, outputFilename) {
   let backgroundPath;
   switch (eventData.sport?.id) {
     case 1:
-      backgroundPath = path.join(__dirname, "public/templates/football.jpg");
+      backgroundPath = path.join(__dirname, "public/templates/football.png");
       break;
     case 2:
       backgroundPath = path.join(__dirname, "public/templates/hockey.jpg");

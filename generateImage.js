@@ -20,7 +20,7 @@ async function generateImage(eventData, outputFilename) {
   let backgroundPath;
   switch (eventData.sport?.id) {
     case 1:
-      backgroundPath = path.join(__dirname, "public/templates/football.png");
+      backgroundPath = path.join(__dirname, "public/templates/football.jpg");
       break;
     case 2:
       backgroundPath = path.join(__dirname, "public/templates/hockey.jpg");

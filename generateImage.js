@@ -13,12 +13,12 @@ const path = require("path");
 // registerFont(path.resolve("./public/fonts/UniSans-Heavy.ttf"), {
 //   family: "UniSansHeavyCaps",
 // });
-registerFont(
-  path.join(__dirname, "public/fonts", "Roboto-ExtraBold.ttf"),
-  {
-    family: "RobotoExtraBold",
-  }
-);
+// registerFont(
+//   path.join(__dirname, "public/fonts", "Roboto-ExtraBold.ttf"),
+//   {
+//     family: "RobotoExtraBold",
+//   }
+// );
 // registerFont(path.join(__dirname, "public/fonts", "Roboto-Condensed-ExtraBold.ttf"), {
 //   family: "RobotoCondensedExtraBold",
 // });
@@ -61,7 +61,7 @@ async function generateImage(eventData, outputFilename) {
 
   // Название лиги
   ctx.fillStyle = "#fff";
-  ctx.font = '27px RobotoExtraBold';
+  ctx.font = 'bold 27px "Roboto Condensed"';
   ctx.fillText(eventData.league_name.toUpperCase(), 122, 110);
 
   // Сброс выравнивания (по умолчанию влево)

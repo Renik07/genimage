@@ -83,13 +83,13 @@ async function fetchAndPost() {
       const caption = buildCaption(event);
 
       // Задержка перед отправкой (1.5 сек на каждый следующий пост)
-      await new Promise((resolve) => setTimeout(resolve, i * 1500));
+      // await new Promise((resolve) => setTimeout(resolve, i * 1500));
 
-      await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, {
-        caption,
-      });
+      // await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, {
+      //   caption,
+      // });
 
-      console.log("Отправлено в Telegram:", filename);
+      // console.log("Отправлено в Telegram:", filename);
     }
   } catch (err) {
     console.error("Ошибка:", err.message);

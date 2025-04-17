@@ -57,7 +57,7 @@ async function generateImage(eventData, outputFilename) {
   // Название лиги
   ctx.fillStyle = "#fff";
   ctx.font = '27px "Roboto Condensed ExtraBold"';
-  // ctx.font = 'bold 27px "Roboto Condensed"';
+  // ctx.font = 'bold 27px "RobotoExtraBold"';
   ctx.fillText(eventData.league_name.toUpperCase(), 122, 110);
 
   // Сброс выравнивания (по умолчанию влево)
@@ -70,7 +70,8 @@ async function generateImage(eventData, outputFilename) {
   ctx.fillText(`${formatDateTime(eventData.kickoff)}`, 122, 170);
 
   // Названия команд
-  ctx.font = '55px "RobotoExtraBold"';
+  ctx.font = '58px "Roboto Condensed Black"';
+  // ctx.font = '55px "RobotoExtraBold"';
   ctx.fillStyle = "#fff";
   let team1 = truncateText(eventData.t1_name.toUpperCase(), 18);
   let team2 = truncateText(eventData.t2_name.toUpperCase(), 18);
@@ -80,7 +81,8 @@ async function generateImage(eventData, outputFilename) {
   // Коэффициенты
   ctx.fillStyle = "#fff";
   ctx.textAlign = "center";
-  ctx.font = '38px "RobotoExtraBold"';
+  ctx.font = '38px "Roboto Condensed Black"';
+  // ctx.font = '38px "RobotoExtraBold"';
   ctx.fillText(`${eventData.rates.pobeditel.runner["1"]}`, 295, 835);
   if (eventData.sport?.id !== 3 && eventData.rates?.pobeditel?.runner?.["X"]) {
     ctx.fillText(`${eventData.rates.pobeditel.runner["X"]}`, 555, 835);

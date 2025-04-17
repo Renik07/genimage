@@ -10,17 +10,17 @@ const path = require("path");
 //     family: "TTBluescreensTrial",
 //   }
 // );
-registerFont(path.resolve("./public/fonts/UniSans-Heavy.ttf"), {
-  family: "UniSansHeavyCaps",
-});
-// registerFont(
-//   path.join(__dirname, "public/fonts", "TT-Bluescreens-Trial-ExtraBold.ttf"),
-//   {
-//     family: "TTBluescreensTrial",
-//   }
-// );
-// registerFont(path.join(__dirname, "public/fonts", "UniSans-Heavy.ttf"), {
+// registerFont(path.resolve("./public/fonts/UniSans-Heavy.ttf"), {
 //   family: "UniSansHeavyCaps",
+// });
+registerFont(
+  path.join(__dirname, "public/fonts", "Roboto-ExtraBold.ttf"),
+  {
+    family: "RobotoExtraBold",
+  }
+);
+// registerFont(path.join(__dirname, "public/fonts", "Roboto-Condensed-ExtraBold.ttf"), {
+//   family: "RobotoCondensedExtraBold",
 // });
 
 async function generateImage(eventData, outputFilename) {
@@ -47,9 +47,9 @@ async function generateImage(eventData, outputFilename) {
   let backgroundImage;
   try {
     backgroundImage = await loadImage(backgroundPath);
-    console.log("✅ Фон успешно загружен:", backgroundPath);
+    console.log("Фон успешно загружен:", backgroundPath);
   } catch (err) {
-    console.error("❌ Ошибка загрузки фона:", err.message);
+    console.error("Ошибка загрузки фона:", err.message);
     throw err;
   }
   ctx.drawImage(backgroundImage, 0, 0, width, height);
@@ -61,19 +61,19 @@ async function generateImage(eventData, outputFilename) {
 
   // Название лиги
   ctx.fillStyle = "#fff";
-  ctx.font = "bold 28px UniSansHeavyCaps";
+  ctx.font = '27px RobotoExtraBold';
   ctx.fillText(eventData.league_name.toUpperCase(), 122, 110);
 
   // Сброс выравнивания (по умолчанию влево)
   ctx.textAlign = "left";
 
   // Дата матча
-  ctx.font = "58px UniSansHeavyCaps";
+  ctx.font = '63px "RobotoExtraBold"';
   ctx.fillStyle = "#fff";
   ctx.fillText(`${formatDateTime(eventData.kickoff)}`, 122, 170);
 
   // Названия команд
-  ctx.font = "bold 60px UniSansHeavyCaps";
+  ctx.font = '55px "RobotoExtraBold"';
   ctx.fillStyle = "#fff";
   let team1 = truncateText(eventData.t1_name.toUpperCase(), 18);
   let team2 = truncateText(eventData.t2_name.toUpperCase(), 18);
@@ -83,7 +83,7 @@ async function generateImage(eventData, outputFilename) {
   // Коэффициенты
   ctx.fillStyle = "#fff";
   ctx.textAlign = "center";
-  ctx.font = "bold 40px UniSansHeavyCaps";
+  ctx.font = '38px "RobotoExtraBold"';
   ctx.fillText(`${eventData.rates.pobeditel.runner["1"]}`, 295, 835);
   if (eventData.sport?.id !== 3 && eventData.rates?.pobeditel?.runner?.["X"]) {
     ctx.fillText(`${eventData.rates.pobeditel.runner["X"]}`, 555, 835);

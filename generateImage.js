@@ -53,22 +53,19 @@ async function generateImage(eventData, outputFilename) {
     throw err;
   }
   ctx.drawImage(backgroundImage, 0, 0, width, height);
-  // const backgroundPath = path.join(__dirname, "public/templates/football.jpg");
-  // const backgroundImage = await loadImage(backgroundPath);
-  // ctx.drawImage(backgroundImage, 0, 0, width, height);
-  // ctx.fillStyle = '#ffffff';
-  // ctx.fillRect(0, 0, width, height);
 
   // Название лиги
   ctx.fillStyle = "#fff";
-  ctx.font = 'bold 27px "Roboto Condensed"';
+  ctx.font = '27px "Roboto Condensed ExtraBold"';
+  // ctx.font = 'bold 27px "Roboto Condensed"';
   ctx.fillText(eventData.league_name.toUpperCase(), 122, 110);
 
   // Сброс выравнивания (по умолчанию влево)
   ctx.textAlign = "left";
 
   // Дата матча
-  ctx.font = '63px "RobotoExtraBold"';
+  ctx.font = '63px "Roboto Condensed Black"';
+  // ctx.font = '63px "RobotoExtraBold"';
   ctx.fillStyle = "#fff";
   ctx.fillText(`${formatDateTime(eventData.kickoff)}`, 122, 170);
 

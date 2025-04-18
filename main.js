@@ -54,20 +54,17 @@ async function fetchTopEventsWithRetry(url, retries = 5, delay = 3000) {
 async function fetchAndPost() {
   try {
     // Удаляем все PNG-файлы из папки перед генерацией
-    fs.readdir(imagesDir, (err, files) => {
-      if (err) {
-        console.error("Ошибка при чтении папки изображений:", err);
-        return;
-      }
-
+    try {
+      const files = await fs.promises.readdir(imagesDir);
       for (const file of files) {
         if (file.endsWith(".png")) {
-          fs.unlinkSync(path.join(imagesDir, file));
+          await fs.promises.unlink(path.join(imagesDir, file));
         }
       }
-
       console.log("Очищена папка изображений.");
-    });
+    } catch (err) {
+      console.error("Ошибка при очистке папки изображений:", err);
+    }
 
     const urls = [
       "https://leon.ru/blog/api/top-events?limit=3&sport_id=1",
@@ -84,31 +81,42 @@ async function fetchAndPost() {
 
     for (let i = 0; i < events.length; i++) {
       const event = events[i];
-
-      // Пропускаем, если нет коэффициентов
+    
       if (!event.rates) {
-        console.log(`Пропущено: нет коэффициентов`);
+        console.log("Пропущено: нет коэффициентов");
         continue;
       }
-
+    
       const filename = `${event.slug}.png`;
       const filepath = path.join(imagesDir, filename);
-
-      await generateImage(event, filename);
-      console.log("Сохранено изображение:", filename);
-
+    
+      try {
+        await generateImage(event, filename);
+        console.log("Сохранено изображение:", filename);
+      } catch (err) {
+        console.error(`Ошибка генерации изображения для ${filename}:`, err.message);
+        continue;
+      }
+    
+      if (!fs.existsSync(filepath)) {
+        console.warn(`Файл не найден после генерации: ${filename}`);
+        continue;
+      }
+    
       const imageBuffer = fs.readFileSync(filepath);
-
       const caption = buildCaption(event);
-
-      // Задержка перед отправкой (1.5 сек на каждый следующий пост)
-      // await new Promise((resolve) => setTimeout(resolve, i * 1500));
-
-      // await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, {
-      //   caption,
-      // });
-
-      // console.log("Отправлено в Telegram:", filename);
+    
+      try {
+        await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, { caption });
+        console.log("Отправлено в Telegram:", filename);
+      } catch (err) {
+        console.error("Ошибка отправки:", err.message);
+      }
+    
+      if (i < events.length - 1) {
+        console.log("Ждём 30 минут до следующей публикации...");
+        await new Promise((resolve) => setTimeout(resolve, 2 * 60 * 1000)); // 30 мин
+      }
     }
   } catch (err) {
     console.error("Ошибка:", err.message);

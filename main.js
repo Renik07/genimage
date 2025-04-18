@@ -21,8 +21,8 @@ dayjs.extend(timezone);
 dayjs.locale("ru");
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-// const TELEGRAM_CHAT_ID = "@for_forecast";
-const TELEGRAM_CHAT_ID = "@foooor_forecast";
+const TELEGRAM_CHAT_ID = "@for_forecast";
+// const TELEGRAM_CHAT_ID = "@foooor_forecast";
 
 if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
   console.error("Не заданы TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID в .env");

@@ -44,14 +44,17 @@ async function fetchTopEventsWithRetry(url, retries = 5, delay = 3000) {
 }
 
 function buildCaption(event) {
-  const teamLine = `${event.t1_name} - ${event.t2_name}`;
+  const teamLine = `<b>${event.t1_name} - ${event.t2_name}</b>`;
   const leagueLine = event.league_name;
-  const dateLine = dayjs(event.kickoff).tz("Europe/Moscow").locale("ru").format("D MMMM HH:mm");
+  const dateLine = dayjs(event.kickoff)
+    .tz("Europe/Moscow")
+    .locale("ru")
+    .format("D MMMM HH:mm");
 
   const rates = event.rates?.pobeditel?.runner || {};
-  const k1 = rates["1"] ? `П1 - ${rates["1"]}` : "";
-  const x = rates["X"] ? `X - ${rates["X"]}` : "";
-  const k2 = rates["2"] ? `П2 - ${rates["2"]}` : "";
+  const k1 = rates["1"] ? `<b>П1</b> - <b>${rates["1"]}</b>` : "";
+  const x = rates["X"] ? `<b>Х</b> - <b>${rates["X"]}</b>` : "";
+  const k2 = rates["2"] ? `<b>П2</b> - <b>${rates["2"]}</b>` : "";
 
   let oddsLine = "";
 
@@ -113,7 +116,10 @@ async function postImagesWithDelay(events) {
     const caption = buildCaption(event);
 
     try {
-      await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, { caption });
+      await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, {
+        caption,
+        parse_mode: "HTML",
+      });
       console.log("Отправлено в Telegram:", filename);
     } catch (err) {
       console.error("Ошибка отправки:", err.message);
@@ -121,7 +127,7 @@ async function postImagesWithDelay(events) {
 
     if (i < events.length - 1) {
       console.log("Ждем 30 минут до следующей публикации...");
-      await new Promise((resolve) => setTimeout(resolve, 3 * 60 * 1000)); // 30 минут
+      await new Promise((resolve) => setTimeout(resolve, 30 * 60 * 1000)); // 30 минут
     }
   }
 }

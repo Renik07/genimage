@@ -19,7 +19,8 @@ const axios = require("axios");
 const generateImage = require("./generateImage");
 const TelegramBot = require("node-telegram-bot-api");
 
-require("dotenv").config();
+// require("dotenv").config();
+require("dotenv").config({ path: "/home/node/hello-world/.env" });
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 // const TELEGRAM_CHAT_ID = "@for_forecast";

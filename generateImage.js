@@ -83,7 +83,10 @@ async function generateImage(eventData, outputFilename) {
   ctx.font = '38px "Roboto Condensed Black"';
   // ctx.font = '38px "RobotoExtraBold"';
 
-  if (eventData.sport?.id === 2 || eventData.sport?.id === 1 && eventData.rates?.pobeditel?.runner?.["X"]) {
+  if (
+    eventData.sport?.id === 2 ||
+    (eventData.sport?.id === 1 && eventData.rates?.pobeditel?.runner?.["X"])
+  ) {
     ctx.fillText(`${eventData.rates.pobeditel.runner["1"]}`, 295, 835);
     ctx.fillText(`${eventData.rates.pobeditel.runner["2"]}`, 820, 835);
     ctx.fillText(`${eventData.rates.pobeditel.runner["X"]}`, 555, 835);
@@ -93,8 +96,27 @@ async function generateImage(eventData, outputFilename) {
   }
 
   // Логотипы
-  const t1Logo = await loadImage(eventData.t1_logo);
-  const t2Logo = await loadImage(eventData.t2_logo);
+  async function safeLoadImage(src, fallbackPath) {
+    try {
+      return await loadImage(src);
+    } catch (err) {
+      console.warn(
+        `Не удалось загрузить изображение: ${src}. Использую заглушку.`
+      );
+      return await loadImage(fallbackPath);
+    }
+  }
+  const t1Logo = await safeLoadImage(
+    eventData.t1_logo,
+    path.join(__dirname, "public/templates/logo1.png")
+  );
+
+  const t2Logo = await safeLoadImage(
+    eventData.t2_logo,
+    path.join(__dirname, "public/templates/logo2.png")
+  );
+  // const t1Logo = await loadImage(eventData.t1_logo);
+  // const t2Logo = await loadImage(eventData.t2_logo);
   ctx.drawImage(t1Logo, 145, 319, 100, 100);
   ctx.drawImage(t2Logo, 145, 519, 100, 100);
 

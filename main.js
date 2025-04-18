@@ -21,8 +21,8 @@ dayjs.extend(timezone);
 dayjs.locale("ru");
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = "@for_forecast";
-// const TELEGRAM_CHAT_ID = "@foooor_forecast";
+// const TELEGRAM_CHAT_ID = "@for_forecast";
+const TELEGRAM_CHAT_ID = "@foooor_forecast";
 
 if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
   console.error("Не заданы TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID в .env");
@@ -32,6 +32,24 @@ if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false });
 const imagesDir = path.join(__dirname, "public/images");
 const maxCaptionLength = 1024;
+
+async function fetchTopEventsWithRetry(url, retries = 5, delay = 3000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (err) {
+      console.error(`Ошибка запроса к ${url} (попытка ${i + 1}):`, err.message);
+      if (i < retries - 1) {
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        delay *= 2;
+      } else {
+        console.error("Не удалось получить данные после нескольких попыток.");
+        return [];
+      }
+    }
+  }
+}
 
 async function fetchAndPost() {
   try {
@@ -51,24 +69,18 @@ async function fetchAndPost() {
       console.log("Очищена папка изображений.");
     });
 
-    async function fetchTopEventsWithRetry(retries = 5, delay = 3000) {
-      for (let i = 0; i < retries; i++) {
-        try {
-          const response = await axios.get("https://leon.ru/blog/api/top-events?limit=10");
-          return response.data;
-        } catch (err) {
-          console.error(`Ошибка запроса (попытка ${i + 1}):`, err.message);
-          if (i < retries - 1) {
-            await new Promise((resolve) => setTimeout(resolve, delay));
-            delay *= 2; // увеличиваем задержку
-          } else {
-            throw new Error("Не удалось получить данные после нескольких попыток");
-          }
-        }
-      }
-    }
+    const urls = [
+      "https://leon.ru/blog/api/top-events?limit=3&sport_id=1",
+      "https://leon.ru/blog/api/top-events?limit=3&sport_id=2",
+      "https://leon.ru/blog/api/top-events?limit=3&sport_id=3",
+    ];
 
-    const events = await fetchTopEventsWithRetry();
+    let events = [];
+
+    for (const url of urls) {
+      const data = await fetchTopEventsWithRetry(url);
+      events = events.concat(data);
+    }
 
     for (let i = 0; i < events.length; i++) {
       const event = events[i];
@@ -86,24 +98,17 @@ async function fetchAndPost() {
       console.log("Сохранено изображение:", filename);
 
       const imageBuffer = fs.readFileSync(filepath);
-      // const rawCaption = event.forecast?.content || "Описание отсутствует";
-      // const withDates = parseKickoffTags(rawCaption);
-      // const cleanCaption = withDates.replace(/<\/?[^>]+(>|$)/g, "").trim();
-      // let trimmedCaption = cleanCaption;
-      // if (cleanCaption.length > maxCaptionLength) {
-      //   trimmedCaption = cleanCaption.slice(0, maxCaptionLength - 1) + "…";
-      // }
 
       const caption = buildCaption(event);
 
       // Задержка перед отправкой (1.5 сек на каждый следующий пост)
-      await new Promise((resolve) => setTimeout(resolve, i * 1500));
+      // await new Promise((resolve) => setTimeout(resolve, i * 1500));
 
-      await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, {
-        caption,
-      });
+      // await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, {
+      //   caption,
+      // });
 
-      console.log("Отправлено в Telegram:", filename);
+      // console.log("Отправлено в Telegram:", filename);
     }
   } catch (err) {
     console.error("Ошибка:", err.message);

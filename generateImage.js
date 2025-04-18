@@ -29,6 +29,15 @@ async function generateImage(eventData, outputFilename) {
     case 3:
       backgroundPath = path.join(__dirname, "public/templates/basketball.jpg");
       break;
+    case 4:
+      backgroundPath = path.join(__dirname, "public/templates/tennis.jpg");
+      break;
+    case 5:
+      backgroundPath = path.join(__dirname, "public/templates/cs.jpg");
+      break;
+    case 6:
+      backgroundPath = path.join(__dirname, "public/templates/dota.jpg");
+      break;
     default:
       backgroundPath = path.join(__dirname, "public/templates/default.jpg");
   }
@@ -54,7 +63,6 @@ async function generateImage(eventData, outputFilename) {
   // Дата матча
   /* server */
   ctx.font = '63px "TT Bluescreens Trial ExtraBold"';
-  // ctx.font = '63px "Roboto Condensed Black"';
   /* local */
   // ctx.font = '63px "RobotoExtraBold"';
   ctx.fillStyle = "#fff";
@@ -74,14 +82,14 @@ async function generateImage(eventData, outputFilename) {
   ctx.textAlign = "center";
   ctx.font = '38px "Roboto Condensed Black"';
   // ctx.font = '38px "RobotoExtraBold"';
-  ctx.fillText(`${eventData.rates.pobeditel.runner["1"]}`, 295, 835);
-  if (eventData.sport?.id !== 3 && eventData.rates?.pobeditel?.runner?.["X"]) {
-    ctx.fillText(`${eventData.rates.pobeditel.runner["X"]}`, 555, 835);
-  }
-  if (eventData.sport?.id === 3) {
-    ctx.fillText(`${eventData.rates.pobeditel.runner["2"]}`, 560, 821);
-  } else {
+
+  if (eventData.sport?.id === 2 || eventData.sport?.id === 1 && eventData.rates?.pobeditel?.runner?.["X"]) {
+    ctx.fillText(`${eventData.rates.pobeditel.runner["1"]}`, 295, 835);
     ctx.fillText(`${eventData.rates.pobeditel.runner["2"]}`, 820, 835);
+    ctx.fillText(`${eventData.rates.pobeditel.runner["X"]}`, 555, 835);
+  } else {
+    ctx.fillText(`${eventData.rates.pobeditel.runner["1"]}`, 385, 835);
+    ctx.fillText(`${eventData.rates.pobeditel.runner["2"]}`, 790, 835);
   }
 
   // Логотипы

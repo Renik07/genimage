@@ -51,10 +51,24 @@ async function fetchAndPost() {
       console.log("Очищена папка изображений.");
     });
 
-    const response = await axios.get(
-      "https://leon.ru/blog/api/top-events?sport_id=1"
-    );
-    const events = response.data;
+    async function fetchTopEventsWithRetry(retries = 5, delay = 3000) {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const response = await axios.get("https://leon.ru/blog/api/top-events?limit=10");
+          return response.data;
+        } catch (err) {
+          console.error(`Ошибка запроса (попытка ${i + 1}):`, err.message);
+          if (i < retries - 1) {
+            await new Promise((resolve) => setTimeout(resolve, delay));
+            delay *= 2; // увеличиваем задержку
+          } else {
+            throw new Error("Не удалось получить данные после нескольких попыток");
+          }
+        }
+      }
+    }
+
+    const events = await fetchTopEventsWithRetry();
 
     for (let i = 0; i < events.length; i++) {
       const event = events[i];
@@ -83,13 +97,13 @@ async function fetchAndPost() {
       const caption = buildCaption(event);
 
       // Задержка перед отправкой (1.5 сек на каждый следующий пост)
-      // await new Promise((resolve) => setTimeout(resolve, i * 1500));
+      await new Promise((resolve) => setTimeout(resolve, i * 1500));
 
-      // await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, {
-      //   caption,
-      // });
+      await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, {
+        caption,
+      });
 
-      // console.log("Отправлено в Telegram:", filename);
+      console.log("Отправлено в Telegram:", filename);
     }
   } catch (err) {
     console.error("Ошибка:", err.message);

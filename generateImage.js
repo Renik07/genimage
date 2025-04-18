@@ -9,6 +9,7 @@ const path = require("path");
 //   {
 //     family: "RobotoExtraBold",
 //   }
+// )
 
 async function generateImage(eventData, outputFilename) {
   const width = 1000;
@@ -51,7 +52,10 @@ async function generateImage(eventData, outputFilename) {
   ctx.textAlign = "left";
 
   // Дата матча
-  ctx.font = '63px "Roboto Condensed Black"';
+  /* server */
+  ctx.font = '63px "TT Bluescreens Trial ExtraBold"';
+  // ctx.font = '63px "Roboto Condensed Black"';
+  /* local */
   // ctx.font = '63px "RobotoExtraBold"';
   ctx.fillStyle = "#fff";
   ctx.fillText(`${formatDateTime(eventData.kickoff)}`, 122, 170);

@@ -23,8 +23,8 @@ const TelegramBot = require("node-telegram-bot-api");
 require("dotenv").config({ path: "/home/node/hello-world/.env" });
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-// const TELEGRAM_CHAT_ID = "@for_forecast";
-const TELEGRAM_CHAT_ID = "@foooor_forecast";
+const TELEGRAM_CHAT_ID = "@for_forecast";
+// const TELEGRAM_CHAT_ID = "@foooor_forecast";
 
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false });
 const imagesDir = path.join(__dirname, "public/images");
@@ -121,7 +121,7 @@ async function postImagesWithDelay(events) {
 
     if (i < events.length - 1) {
       console.log("Ждем 30 минут до следующей публикации...");
-      await new Promise((resolve) => setTimeout(resolve, 1 * 60 * 1000)); // 30 минут
+      await new Promise((resolve) => setTimeout(resolve, 3 * 60 * 1000)); // 30 минут
     }
   }
 }

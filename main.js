@@ -1,6 +1,12 @@
 process.env.NTBA_FIX_319 = 1;
 process.env.NTBA_FIX_350 = 0;
 
+require("dotenv").config({ path: "/home/node/hello-world/.env" });
+// require("dotenv").config();
+
+const TELEGRAM_CHAT_ID = "@for_forecast";
+// const TELEGRAM_CHAT_ID = "@foooor_forecast";
+
 const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc");
 const timezone = require("dayjs/plugin/timezone");
@@ -17,14 +23,11 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 const generateImage = require("./generateImage");
+const generateForecast = require("./generateForecast");
 const TelegramBot = require("node-telegram-bot-api");
 
-// require("dotenv").config();
-require("dotenv").config({ path: "/home/node/hello-world/.env" });
-
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = "@for_forecast";
-// const TELEGRAM_CHAT_ID = "@foooor_forecast";
+
 
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false });
 const imagesDir = path.join(__dirname, "public/images");
@@ -50,28 +53,13 @@ async function fetchTopEventsWithRetry(url, retries = 5, delay = 3000) {
   return [];
 }
 
-function buildCaption(event) {
-  const teamLine = `<b>${event.t1_name} - ${event.t2_name}</b>`;
-  const leagueLine = event.league_name;
-  const dateLine = dayjs(event.kickoff)
-    .tz("Europe/Moscow")
-    .locale("ru")
-    .format("D MMMM HH:mm");
-
-  const rates = event.rates?.pobeditel?.runner || {};
-  const k1 = rates["1"] ? `<b>П1</b> - <b>${rates["1"]}</b>` : "";
-  const x = rates["X"] ? `<b>Х</b> - <b>${rates["X"]}</b>` : "";
-  const k2 = rates["2"] ? `<b>П2</b> - <b>${rates["2"]}</b>` : "";
-
-  let oddsLine = "";
-
-  if (event.sport?.id === 3) {
-    oddsLine = [k1, k2].filter(Boolean).join(" | ");
-  } else {
-    oddsLine = [k1, x, k2].filter(Boolean).join(" | ");
+async function buildCaption(event) {
+  let forecastText = "";
+  if (event.forecast?.content) {
+    forecastText = await generateForecast(event.forecast.content);
   }
-
-  return `${teamLine}\n${leagueLine}\n${dateLine}\n\nИсходы:\n${oddsLine}`;
+  console.log("📤 Raw content от DeepSeek:", forecastText);
+  return `${forecastText}`;
 }
 
 async function generateAllImages() {
@@ -132,7 +120,7 @@ async function postImagesWithDelay(events) {
     }
 
     const imageBuffer = fs.readFileSync(filepath);
-    const caption = buildCaption(event);
+    const caption = await buildCaption(event);
 
     try {
       console.log("Отправляем в ТГ:", filename);

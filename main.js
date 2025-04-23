@@ -33,13 +33,20 @@ async function fetchTopEventsWithRetry(url, retries = 5, delay = 3000) {
   for (let i = 0; i < retries; i++) {
     try {
       const response = await axios.get(url);
+      console.log(`+ Получены данные с ${url}`);
       return response.data;
     } catch (err) {
-      console.error(`Ошибка запроса к ${url} (попытка ${i + 1}):`, err.message);
+      console.error(
+        `- Ошибка запроса к ${url} (попытка ${i + 1}):`,
+        err.message
+      );
       await new Promise((resolve) => setTimeout(resolve, delay));
       delay *= 2;
     }
   }
+  console.warn(
+    `! Не удалось получить данные с ${url} после ${retries} попыток`
+  );
   return [];
 }
 
@@ -75,7 +82,7 @@ async function generateAllImages() {
     }
   });
 
-  console.log("Очищена папка изображений.");
+  console.log("+ Очищена папка изображений.");
 
   const urls = [
     "https://leon.ru/blog/api/top-events?limit=3&sport_id=1",
@@ -90,12 +97,22 @@ async function generateAllImages() {
     allEvents = allEvents.concat(data);
   }
 
+  console.log("+ Всего событий получено:", allEvents.length);
+
   for (const event of allEvents) {
-    if (!event.rates) continue;
+    console.log("+ Обработка события:", event.slug);
+    if (!event.rates) {
+      console.warn("! Пропущено из-за отсутствия rates:", event.slug);
+      continue;
+    }
 
     const filename = `${event.slug}.png`;
-    await generateImage(event, filename);
-    console.log("Сгенерировано:", filename);
+    try {
+      await generateImage(event, filename);
+      console.log("+ Сгенерировано изображение:", filename);
+    } catch (err) {
+      console.error("- Ошибка генерации изображения:", err.message);
+    }
   }
 
   return allEvents;
@@ -107,8 +124,10 @@ async function postImagesWithDelay(events) {
     const filename = `${event.slug}.png`;
     const filepath = path.join(imagesDir, filename);
 
+    console.log(`+ Попытка отправки ${i + 1} / ${events.length}: ${filename}`);
+
     if (!fs.existsSync(filepath)) {
-      console.warn("Файл не найден:", filename);
+      console.warn("! Файл не найден:", filename);
       continue;
     }
 
@@ -116,13 +135,14 @@ async function postImagesWithDelay(events) {
     const caption = buildCaption(event);
 
     try {
+      console.log("Отправляем в ТГ:", filename);
       await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, {
         caption,
         parse_mode: "HTML",
       });
-      console.log("Отправлено в Telegram:", filename);
+      console.log("+ Отправлено в Telegram:", filename);
     } catch (err) {
-      console.error("Ошибка отправки:", err.message);
+      console.error("- Ошибка отправки:", err.message);
     }
 
     if (i < events.length - 1) {
@@ -133,8 +153,14 @@ async function postImagesWithDelay(events) {
 }
 
 async function main() {
-  const events = await generateAllImages();
-  await postImagesWithDelay(events);
+  try {
+    console.log("+ Запуск скрипта...");
+    const events = await generateAllImages();
+    await postImagesWithDelay(events);
+    console.log("+ Скрипт завершён.");
+  } catch (err) {
+    console.error("! Глобальная ошибка в main():", err.message);
+  }
 }
 
 main();

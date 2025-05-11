@@ -13,7 +13,6 @@ const path = require("path");
 
 async function generateImage(eventData, outputFilename) {
   try {
-
     if (!eventData.rates?.pobeditel?.runner) {
       console.warn("! Нет коэффициентов, пропускаем:", eventData.slug);
       return;
@@ -112,6 +111,11 @@ async function generateImage(eventData, outputFilename) {
     console.log("Отрисовка лого команд...");
 
     async function safeLoadImage(src, fallbackPath) {
+      if (!src) {
+        console.warn(`! Логотип не задан. Использую заглушку: ${fallbackPath}`);
+        return await loadImage(fallbackPath);
+      }
+
       try {
         return await loadImage(src);
       } catch (err) {
@@ -121,6 +125,7 @@ async function generateImage(eventData, outputFilename) {
         return await loadImage(fallbackPath);
       }
     }
+
     const t1Logo = await safeLoadImage(
       eventData.t1_logo,
       path.join(__dirname, "public/templates/logo1.png")

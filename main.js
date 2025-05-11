@@ -1,11 +1,13 @@
 process.env.NTBA_FIX_319 = 1;
 process.env.NTBA_FIX_350 = 0;
 
+/* server */
 require("dotenv").config({ path: "/home/node/hello-world/.env" });
-// require("dotenv").config();
-
 const TELEGRAM_CHAT_ID = "@for_forecast";
+
+/* local */
 // const TELEGRAM_CHAT_ID = "@foooor_forecast";
+// require("dotenv").config();
 
 const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc");
@@ -27,7 +29,6 @@ const generateForecast = require("./generateForecast");
 const TelegramBot = require("node-telegram-bot-api");
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-
 
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false });
 const imagesDir = path.join(__dirname, "public/images");

@@ -70,7 +70,7 @@ async function generateImage(eventData, outputFilename) {
     // Дата матча
     const [date, time] = formatDateTime(eventData.kickoff);
 
-    ctx.font = '65px "DINPro Condensed Black"';
+    ctx.font = '65px "DINPro Cond Black"';
     ctx.fillStyle = "#fff";
     ctx.textAlign = "center";
 

@@ -64,13 +64,13 @@ async function generateImage(eventData, outputFilename) {
     // Название лиги
     ctx.fillStyle = "#fff";
     ctx.textAlign = "center";
-    ctx.font = '39px "DINPro Condensed Black"';
+    ctx.font = '39px "DINPro Cond Black"';
     ctx.fillText(eventData.league_name.toUpperCase(), x, 160);
 
     // Дата матча
     const [date, time] = formatDateTime(eventData.kickoff);
 
-    ctx.font = '65px "TT Bluescreens Trial ExtraBold"';
+    ctx.font = '65px "DINPro Condensed Black"';
     ctx.fillStyle = "#fff";
     ctx.textAlign = "center";
 
@@ -80,7 +80,7 @@ async function generateImage(eventData, outputFilename) {
     // Названия команд
     console.log("Отрисовка названий команд...");
 
-    ctx.font = '125px "DINPro Condensed Black"';
+    ctx.font = '125px "DINPro Cond Black"';
     ctx.fillStyle = "#fff";
     ctx.textAlign = "center";
     let team1 = truncateText(eventData.t1_name.toUpperCase(), 15);

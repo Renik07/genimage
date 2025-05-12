@@ -1,5 +1,8 @@
-require("dotenv").config();
-// require("dotenv").config({ path: "/home/node/hello-world/.env" });
+//server
+require("dotenv").config({ path: "/home/node/hello-world/.env" });
+
+// local
+// require("dotenv").config();
 
 const OpenAI = require("openai");
 

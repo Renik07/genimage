@@ -22,6 +22,7 @@ async function generateImage(eventData, outputFilename) {
     const height = 1000;
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext("2d");
+    const x = canvas.width / 2;
 
     // Фон
     let backgroundPath;
@@ -62,49 +63,47 @@ async function generateImage(eventData, outputFilename) {
 
     // Название лиги
     ctx.fillStyle = "#fff";
-    ctx.font = '27px "Roboto Condensed ExtraBold"';
-    // ctx.font = 'bold 27px "RobotoExtraBold"';
-    ctx.fillText(eventData.league_name.toUpperCase(), 122, 110);
-
-    // Сброс выравнивания (по умолчанию влево)
-    ctx.textAlign = "left";
+    ctx.textAlign = "center";
+    ctx.font = '39px "DINPro Condensed Black"';
+    ctx.fillText(eventData.league_name.toUpperCase(), x, 160);
 
     // Дата матча
-    /* server */
-    ctx.font = '63px "TT Bluescreens Trial ExtraBold"';
-    /* local */
-    // ctx.font = '63px "RobotoExtraBold"';
+    const [date, time] = formatDateTime(eventData.kickoff);
+
+    ctx.font = '65px "TT Bluescreens Trial ExtraBold"';
     ctx.fillStyle = "#fff";
-    ctx.fillText(`${formatDateTime(eventData.kickoff)}`, 122, 170);
+    ctx.textAlign = "center";
+
+    ctx.fillText(date, x, 260);
+    ctx.fillText(time, x, 320);
 
     // Названия команд
     console.log("Отрисовка названий команд...");
 
-    ctx.font = '58px "Roboto Condensed Black"';
-    // ctx.font = '55px "RobotoExtraBold"';
+    ctx.font = '125px "DINPro Condensed Black"';
     ctx.fillStyle = "#fff";
-    let team1 = truncateText(eventData.t1_name.toUpperCase(), 18);
-    let team2 = truncateText(eventData.t2_name.toUpperCase(), 18);
-    ctx.fillText(team1, 324, 390);
-    ctx.fillText(team2, 324, 590);
+    ctx.textAlign = "center";
+    let team1 = truncateText(eventData.t1_name.toUpperCase(), 15);
+    let team2 = truncateText(eventData.t2_name.toUpperCase(), 15);
+    ctx.fillText(team1, x, 500);
+    ctx.fillText(team2, x, 620);
 
     // Коэффициенты
     console.log("Отрисовка коэффициентов...");
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = "#000";
     ctx.textAlign = "center";
-    ctx.font = '38px "Roboto Condensed Black"';
-    // ctx.font = '38px "RobotoExtraBold"';
+    ctx.font = '65px "TT Bluescreens Trial Black"';
 
     if (
       eventData.sport?.id === 2 ||
       (eventData.sport?.id === 1 && eventData.rates?.pobeditel?.runner?.["X"])
     ) {
-      ctx.fillText(`${eventData.rates.pobeditel.runner["1"]}`, 295, 835);
-      ctx.fillText(`${eventData.rates.pobeditel.runner["2"]}`, 820, 835);
-      ctx.fillText(`${eventData.rates.pobeditel.runner["X"]}`, 555, 835);
+      ctx.fillText(`${eventData.rates.pobeditel.runner["1"]}`, 294, 775);
+      ctx.fillText(`${eventData.rates.pobeditel.runner["X"]}`, 540, 775);
+      ctx.fillText(`${eventData.rates.pobeditel.runner["2"]}`, 789, 775);
     } else {
-      ctx.fillText(`${eventData.rates.pobeditel.runner["1"]}`, 385, 835);
-      ctx.fillText(`${eventData.rates.pobeditel.runner["2"]}`, 790, 835);
+      ctx.fillText(`${eventData.rates.pobeditel.runner["1"]}`, 401, 775);
+      ctx.fillText(`${eventData.rates.pobeditel.runner["2"]}`, 679, 775);
     }
 
     // Логотипы
@@ -136,8 +135,8 @@ async function generateImage(eventData, outputFilename) {
       path.join(__dirname, "public/templates/logo2.png")
     );
 
-    ctx.drawImage(t1Logo, 145, 319, 100, 100);
-    ctx.drawImage(t2Logo, 145, 519, 100, 100);
+    ctx.drawImage(t1Logo, 275, 217, 100, 100);
+    ctx.drawImage(t2Logo, 628, 217, 100, 100);
 
     // Сохраняем
     console.log("Сохранение файла...");
@@ -155,28 +154,13 @@ async function generateImage(eventData, outputFilename) {
 
 /* формат даты */
 function formatDateTime(datetimeStr) {
-  const months = [
-    "ЯНВАРЯ",
-    "ФЕВРАЛЯ",
-    "МАРТА",
-    "АПРЕЛЯ",
-    "МАЯ",
-    "ИЮНЯ",
-    "ИЮЛЯ",
-    "АВГУСТА",
-    "СЕНТЯБРЯ",
-    "ОКТЯБРЯ",
-    "НОЯБРЯ",
-    "ДЕКАБРЯ",
-  ];
-
   const [datePart, timePart] = datetimeStr.split(" ");
   const [year, month, day] = datePart.split("-");
 
-  const formatted = `${parseInt(day)} ${
-    months[parseInt(month) - 1]
-  } ${timePart}`;
-  return formatted;
+  const formattedDate = `${day}.${month}`;
+  const formattedTime = timePart;
+
+  return [formattedDate, formattedTime]; // возвращаем массив строк
 }
 
 /* обрезка текста */

@@ -3,11 +3,11 @@ process.env.NTBA_FIX_350 = 0;
 
 /* server */
 require("dotenv").config({ path: "/home/node/hello-world/.env" });
-const TELEGRAM_CHAT_ID = "@for_forecast";
+// const TELEGRAM_CHAT_ID = "@for_forecast";
 
 /* local */
-// const TELEGRAM_CHAT_ID = "@foooor_forecast";
 // require("dotenv").config();
+const TELEGRAM_CHAT_ID = "@foooor_forecast";
 
 const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc");
@@ -57,7 +57,7 @@ async function fetchTopEventsWithRetry(url, retries = 5, delay = 3000) {
 async function buildCaption(event) {
   let forecastText = "";
   if (event.forecast?.content) {
-    forecastText = await generateForecast(event.forecast.content);
+    // forecastText = await generateForecast(event.forecast.content);
   }
   console.log("📤 Raw content от DeepSeek:", forecastText);
   return `${forecastText}`;
@@ -74,9 +74,9 @@ async function generateAllImages() {
   console.log("+ Очищена папка изображений.");
 
   const urls = [
-    "https://leon.ru/blog/api/top-events?limit=3&sport_id=1",
-    "https://leon.ru/blog/api/top-events?limit=3&sport_id=2",
-    "https://leon.ru/blog/api/top-events?limit=3&sport_id=3",
+    "https://leon.ru/blog/api/top-events?limit=1&sport_id=1",
+    "https://leon.ru/blog/api/top-events?limit=1&sport_id=2",
+    "https://leon.ru/blog/api/top-events?limit=1&sport_id=3",
   ];
 
   let allEvents = [];

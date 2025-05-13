@@ -92,7 +92,7 @@ async function generateImage(eventData, outputFilename) {
     console.log("Отрисовка коэффициентов...");
     ctx.fillStyle = "#000";
     ctx.textAlign = "center";
-    ctx.font = '65px "TT Bluescreens Trial Black"';
+    ctx.font = '63px "TT Bluescreens Trial Black"';
 
     if (
       eventData.sport?.id === 2 ||

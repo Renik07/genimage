@@ -80,11 +80,11 @@ async function generateImage(eventData, outputFilename) {
     // Названия команд
     console.log("Отрисовка названий команд...");
 
-    ctx.font = '125px "DINPro Cond Black"';
+    ctx.font = '122px "DINPro Cond Black"';
     ctx.fillStyle = "#fff";
     ctx.textAlign = "center";
-    let team1 = truncateText(eventData.t1_name.toUpperCase(), 15);
-    let team2 = truncateText(eventData.t2_name.toUpperCase(), 15);
+    let team1 = truncateText(eventData.t1_name.toUpperCase(), 14);
+    let team2 = truncateText(eventData.t2_name.toUpperCase(), 14);
     ctx.fillText(team1, x, 500);
     ctx.fillText(team2, x, 620);
 

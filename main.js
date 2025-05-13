@@ -9,18 +9,6 @@ const TELEGRAM_CHAT_ID = "@for_forecast";
 // require("dotenv").config();
 // const TELEGRAM_CHAT_ID = "@foooor_forecast";
 
-const dayjs = require("dayjs");
-const utc = require("dayjs/plugin/utc");
-const timezone = require("dayjs/plugin/timezone");
-const customParseFormat = require("dayjs/plugin/customParseFormat");
-
-require("dayjs/locale/ru");
-
-dayjs.extend(customParseFormat);
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.locale("ru");
-
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
@@ -57,7 +45,7 @@ async function fetchTopEventsWithRetry(url, retries = 5, delay = 3000) {
 async function buildCaption(event) {
   let forecastText = "";
   if (event.forecast?.content) {
-    // forecastText = await generateForecast(event.forecast.content);
+    forecastText = await generateForecast(event.forecast.content);
   }
   console.log("📤 Raw content от DeepSeek:", forecastText);
   return `${forecastText}`;
@@ -74,9 +62,9 @@ async function generateAllImages() {
   console.log("+ Очищена папка изображений.");
 
   const urls = [
-    // "https://leon.ru/blog/api/top-events?limit=4&sport_id=1",
-    "https://leon.ru/blog/api/top-events?limit=2&sport_id=2",
-    // "https://leon.ru/blog/api/top-events?limit=4&sport_id=3",
+    "https://leon.ru/blog/api/top-events?limit=4&sport_id=1",
+    "https://leon.ru/blog/api/top-events?limit=3&sport_id=2",
+    "https://leon.ru/blog/api/top-events?limit=3&sport_id=3",
   ];
 
   let allEvents = [];
@@ -123,16 +111,16 @@ async function postImagesWithDelay(events) {
     const imageBuffer = fs.readFileSync(filepath);
     const caption = await buildCaption(event);
 
-    // try {
-    //   console.log("Отправляем в ТГ:", filename);
-    //   await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, {
-    //     caption,
-    //     parse_mode: "HTML",
-    //   });
-    //   console.log("+ Отправлено в Telegram:", filename);
-    // } catch (err) {
-    //   console.error("- Ошибка отправки:", err.message);
-    // }
+    try {
+      console.log("Отправляем в ТГ:", filename);
+      await bot.sendPhoto(TELEGRAM_CHAT_ID, imageBuffer, {
+        caption,
+        parse_mode: "HTML",
+      });
+      console.log("+ Отправлено в Telegram:", filename);
+    } catch (err) {
+      console.error("- Ошибка отправки:", err.message);
+    }
 
     if (i < events.length - 1) {
       console.log("Ждем 30 минут до следующей публикации...");
